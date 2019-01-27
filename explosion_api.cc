@@ -6,17 +6,6 @@
 using namespace croco;
 
 /**
- * get markov size
- *
- * @access public
- * @return int
- */
-int ExplosionSize()
-{
-    return sizeof(explosion);
-}
-
-/**
  * create a Explosion handle
  *
  * @access public
@@ -70,10 +59,20 @@ void ExplosionFreeText(EPStr handle)
 EPStr ExplosionExplode(ExplosionHandle handle)
 {
     explosion *explode = static_cast<explosion*>(handle);
-    nlohmann::json retj;
-
+    
     std::vector<std::string> list = explode->explode();
-    nlohmann::json retj = nlohmann::json::parse(list.begin(), list.end());
 
-    return EPStrVal(retj.dump());
+   // nlohmann::json retj = nlohmann::json::parse(list.begin(), list.end());
+    nlohmann::json retj;
+    for (auto &node : list) {
+        retj.push_back(node);
+    }
+
+    std::string word = retj.dump();
+    EPStr retval = new struct _EPStr;
+    retval->len = word.length();
+    retval->buff = new char[retval->len + 1];
+    strcpy(retval->buff, word.c_str());
+
+    return retval;
 }

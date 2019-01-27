@@ -30,25 +30,15 @@ struct _EPStr {
     size_t len;
     char *buff;
 };
-
 typedef struct _EPStr *EPStr;
 typedef void *ExplosionHandle;
 
-EXPLOSION_API int ExplosionSize();
 EXPLOSION_API ExplosionHandle ExplosionCreate(const char *haystack, const char *file);
 EXPLOSION_API void ExplosionFree(ExplosionHandle handle);
 EXPLOSION_API void ExplosionFreeText(EPStr handle);
 EXPLOSION_API EPStr ExplosionExplode(ExplosionHandle handle);
 
 #ifdef __cplusplus
-}
-
-inline EPStr EPStrVal(std::string word) {
-    EPStr retval = new struct _EPStr;
-    retval->len = word.length();
-    retval->buff = new char[retval->len + 1];
-    strcpy(retval->buff, word.c_str());
-    return retval;
 }
 
 #endif /* __cplusplus */
