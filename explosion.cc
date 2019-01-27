@@ -29,26 +29,32 @@ explosion::explosion(const std::string haystack, const std::string file)
  * @access public
  * @return std::vector<std::string>
  */
-std::vector<std::string> explosion::explode()
+nlohmann::json explosion::explode()
 {
-    std::vector<std::string> pieces;
+    nlohmann::json pieces;
 
+    int idx = 0;
     std::size_t pos = 0;
     for (auto &node :_delimiters) {
         if (pos < node.first) {
-            pieces.push_back(_haystack.substr(
+            pieces[idx]["sentence"] = _haystack.substr(
                 pos, node.first - pos
-            ));
+            );
+            pieces[idx]["needed"] = false;
+            idx++;
 
-            pieces.push_back(_haystack.substr(
+            pieces[idx]["sentence"] = _haystack.substr(
                 node.first, node.second
-            ));
+            );
+            pieces[idx]["needed"] = true;
+            idx++;
         }
         pos = node.first + node.second;
     }
 
     if (_haystack.length() > pos) {
-        pieces.push_back(_haystack.substr(pos));
+        pieces[idx]["sentence"] = _haystack.substr(pos);
+        pieces[idx]["needed"] = false;
     }
 
     return pieces;

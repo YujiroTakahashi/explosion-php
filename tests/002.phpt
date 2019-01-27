@@ -10,7 +10,7 @@ $file = "kaomoji.txt";
 $array = croco_explosion($haystack, $file);
 
 foreach ($array as $line){
-    echo $line."\n";
+    echo $line['sentence']."\n";
 }
 ?>
 --EXPECT--

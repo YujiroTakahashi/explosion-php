@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "json.hpp"
+
 namespace croco {
 
 class explosion {
@@ -20,7 +22,7 @@ private:
 
 public:
 	explosion(const std::string haystack, const std::string file);
-	std::vector<std::string> explode();
+	nlohmann::json explode();
 
 private:
     void _find(const std::string needle);

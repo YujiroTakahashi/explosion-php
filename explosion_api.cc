@@ -60,13 +60,7 @@ EPStr ExplosionExplode(ExplosionHandle handle)
 {
     explosion *explode = static_cast<explosion*>(handle);
     
-    std::vector<std::string> list = explode->explode();
-
-   // nlohmann::json retj = nlohmann::json::parse(list.begin(), list.end());
-    nlohmann::json retj;
-    for (auto &node : list) {
-        retj.push_back(node);
-    }
+    nlohmann::json retj = explode->explode();
 
     std::string word = retj.dump();
     EPStr retval = new struct _EPStr;
