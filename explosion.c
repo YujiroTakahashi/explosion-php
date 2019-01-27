@@ -6,6 +6,7 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "ext/json/php_json.h"
 #include "php_explosion.h"
 
 /* If you declare any globals in php_explosion.h uncomment this:
@@ -35,7 +36,7 @@ PHP_INI_END()
 PHP_FUNCTION(croco_explosion)
 {
 	char *haystack = NULL;
-	size_t haystack_len
+	size_t haystack_len;
 	char *file = NULL;
 	size_t file_len;
 

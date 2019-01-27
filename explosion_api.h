@@ -1,8 +1,6 @@
 #ifndef __CROCO_EXPLOSION_API_H
 #define __CROCO_EXPLOSION_API_H
 
-#include <time.h>
-#include <string.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -22,7 +20,7 @@ extern "C" {
 #endif /* EXPLOSION_API */
 
 #ifndef EXPLOSION_VERSION
-#    define EXPLOSION_VERSION 12
+#    define EXPLOSION_VERSION 1
 #endif /* EXPLOSION_VERSION */
 
 #define EXPLOSION_TRUE           (1)

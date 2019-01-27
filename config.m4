@@ -6,7 +6,6 @@ dnl Make sure that the comment is aligned:
 
 if test "$PHP_EXPLOSION" != "no"; then
   PHP_SUBST(EXPLOSION_SHARED_LIBADD)
-
   PHP_ADD_LIBRARY(stdc++, 1, EXPLOSION_SHARED_LIBADD)
   CXXFLAGS="-std=c++11"
 

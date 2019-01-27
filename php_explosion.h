@@ -2,6 +2,8 @@
 #ifndef PHP_EXPLOSION_H
 #define PHP_EXPLOSION_H
 
+#include "explosion_api.h"
+
 extern zend_module_entry explosion_module_entry;
 #define phpext_explosion_ptr &explosion_module_entry
 
