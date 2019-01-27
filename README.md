@@ -37,7 +37,9 @@ $file = "kaomoji.txt";
 $array = croco_explosion($haystack, $file);
 
 foreach ($array as $line){
-    echo $line."\n";
+    echo $line['sentence'];
+    echo $line['needed'] ? '  (*)':'';
+    echo "\n";
 }
 
 ```
@@ -45,11 +47,11 @@ foreach ($array as $line){
 
 ```
 日本語の
-(^_-)-☆
+(^_-)-☆  (*)
 中にある
-(^_-)-☆
+(^_-)-☆  (*)
 顔文字を
-(ﾟДﾟ)ﾉ ｧｨ
+(ﾟДﾟ)ﾉ ｧｨ  (*)
 爆裂
 ```
 -----
