@@ -9,13 +9,12 @@ using namespace croco;
  * create a Explosion handle
  *
  * @access public
- * @param  const std::string str
- * @param  const int nsize
+ * @param  const char *haystack
  * @return ExplosionHandle
  */
-ExplosionHandle ExplosionCreate(const char *haystack, const char *file)
+ExplosionHandle ExplosionCreate(const char *haystack)
 {
-    ExplosionHandle handle = new explosion(std::string(haystack), std::string(file));
+    ExplosionHandle handle = new explosion(std::string(haystack));
     return handle;
 }
 
@@ -50,7 +49,37 @@ void ExplosionFreeText(EPStr handle)
 }
 
 /**
- * fgenerate the text
+ * 正規表現検索
+ *
+ * @access public
+ * @param  ExplosionHandle handle
+ * @param  const char *file
+ * @return void
+ */
+void ExplosionRegexMatch(ExplosionHandle handle, const char *file)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+
+    explode->regexMatch(std::string(file));
+}
+
+/**
+ * 文字列検索
+ *
+ * @access public
+ * @param  ExplosionHandle handle
+ * @param  const char *file
+ * @return void
+ */
+void ExplosionFindMatch(ExplosionHandle handle, const char *file)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+
+    explode->findMatch(std::string(file));
+}
+
+/**
+ * Explode
  *
  * @access public
  * @param  ExplosionHandle handle

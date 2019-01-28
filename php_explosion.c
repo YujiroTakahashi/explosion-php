@@ -39,15 +39,26 @@ PHP_FUNCTION(croco_explosion)
 	size_t haystack_len;
 	char *file = NULL;
 	size_t file_len;
+	char *regfile = NULL;
+	size_t regfile_len = 0;
 
 	ExplosionHandle handle;
 	EPStr json;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &haystack, &haystack_len, &file, &file_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss|s", &haystack, &haystack_len, &file, &file_len, &regfile, &regfile_len) == FAILURE) {
 		return;
 	}
 
-	handle = ExplosionCreate(haystack, file);
+	handle = ExplosionCreate(haystack);
+
+	if (file_len != 0) {
+		ExplosionFindMatch(handle, file);
+	}
+
+	if (regfile_len != 0) {
+		ExplosionRegexMatch(handle, regfile);
+	}
+
 	json = ExplosionExplode(handle);
 
 	array_init(return_value);

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "explosion.h"
 
 namespace croco {
@@ -9,18 +10,77 @@ namespace croco {
  * @param  const std::string haystack
  * @param  const std::string file
  */
-explosion::explosion(const std::string haystack, const std::string file)
+explosion::explosion(const std::string haystack)
+{
+    _haystack = haystack;
+}
+
+/**
+ * 正規表現
+ *
+ * @access public
+ * @param  const std::string file
+ */
+void explosion::regexMatch(const std::string file)
 {
     std::ifstream ifs(file);
     if (ifs.fail()) {
         return ;
     }
-    _haystack = haystack;
+
+    std::string pattern;
+    while (std::getline(ifs, pattern)) {
+        if (pattern.length()) {
+            std::regex reg(pattern);
+            std::sregex_iterator it(std::begin(_haystack), std::end(_haystack), reg);
+            std::sregex_iterator end;
+
+            for (; it != end; ++it) {
+                auto&& match = *it;
+                std::size_t position = static_cast<std::size_t>(match.position());
+                std::size_t length = static_cast<std::size_t>(match.length());
+                Node node = {
+                    match.str(),
+                    position,
+                    length,
+                    TYPE_REGEX
+                };
+                _pieces.insert(std::make_pair(position, node));
+            }
+        } // if (pattern.length())
+    } // while (std::getline(ifs, pattern))
+}
+
+/**
+ * 文字列検索
+ *
+ * @access public
+ * @param  const std::string file
+ */
+void explosion::findMatch(const std::string file)
+{
+    std::ifstream ifs(file);
+    if (ifs.fail()) {
+        return ;
+    }
 
     std::string needle;
     while (std::getline(ifs, needle)) {
-        _find(needle);
-    }
+        if (needle.length()) {
+            std::size_t length = needle.length();
+            std::size_t position = _haystack.find(needle);
+            while (position != std::string::npos) {
+                Node node = {
+                    needle, 
+                    position, 
+                    length,
+                    TYPE_MATCH
+                };
+                _pieces.insert(std::make_pair(position, node));
+                position = _haystack.find(needle, position + length);
+            }
+        } // if (needle.length())
+    } // while (std::getline(ifs, needle))
 }
 
 /**
@@ -34,50 +94,30 @@ nlohmann::json explosion::explode()
     nlohmann::json pieces;
 
     int idx = 0;
-    std::size_t pos = 0;
-    for (auto &node :_delimiters) {
-        if (pos < node.first) {
+    std::size_t position = 0;
+    for (auto &node :_pieces) {
+        if (position < node.first) {
             pieces[idx]["sentence"] = _haystack.substr(
-                pos, node.first - pos
+                position, node.first - position
             );
-            pieces[idx]["needed"] = false;
+            pieces[idx]["type"] = TYPE_NONE;
             idx++;
 
             pieces[idx]["sentence"] = _haystack.substr(
-                node.first, node.second
+                node.first, node.second.length
             );
-            pieces[idx]["needed"] = true;
+            pieces[idx]["type"] = node.second.type;
             idx++;
         }
-        pos = node.first + node.second;
-    }
+        position = node.first + node.second.length;
+    } // for (auto &node :_pieces)
 
-    if (_haystack.length() > pos) {
-        pieces[idx]["sentence"] = _haystack.substr(pos);
-        pieces[idx]["needed"] = false;
+    if (_haystack.length() > position) {
+        pieces[idx]["sentence"] = _haystack.substr(position);
+        pieces[idx]["type"] = TYPE_NONE;
     }
 
     return pieces;
 }
-
-
-/**
- * 文字の位置検索
- *
- * @access prviate
- * @param  const std::string needle
- * @return void
- */
-void explosion::_find(const std::string needle)
-{ 
-    std::size_t length = needle.length();
-    std::size_t pos = _haystack.find(needle);
- 
-    while (pos != std::string::npos) {
-        _delimiters.insert(std::make_pair(pos, length));
-        pos = _haystack.find(needle, pos + length);
-    }
-}
-
 
 } // namespace croco

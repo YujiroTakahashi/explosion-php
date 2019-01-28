@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <map>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -14,18 +15,28 @@ namespace croco {
 
 class explosion {
 public:
-	typedef std::map<std::size_t, std::size_t> delimiters_t;
+    enum {
+        TYPE_NONE,
+        TYPE_MATCH,
+        TYPE_REGEX
+    };
+    typedef struct _Node {
+        std::string str;
+        std::size_t position;
+        std::size_t length;
+        int type;
+    } Node;
+	typedef std::map<std::size_t, Node> pieces_t;
 
 private:
-    delimiters_t _delimiters;
+    pieces_t _pieces;
     std::string _haystack;
 
 public:
-	explosion(const std::string haystack, const std::string file);
+	explosion(const std::string haystack);
+	void regexMatch(const std::string file);
+    void findMatch(const std::string file);
 	nlohmann::json explode();
-
-private:
-    void _find(const std::string needle);
 }; // class explosion
 
 } // namespace croco
