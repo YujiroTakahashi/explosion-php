@@ -16,7 +16,7 @@ edit your php.ini and add:
 
 -----
 
-### array croco_explosion(string haystack, string file)
+### array croco_explosion(string haystack, string file[, string regex_file])
 
 *kaomoji.txt*
 ```php
@@ -27,18 +27,30 @@ edit your php.ini and add:
 (^_-)-☆
 ```
 
+*kaomoji.txt*
+```php
+\([^\)]+\)
+```
+
 *sample.php*
 
 ```php
 <?php
-$haystack = "日本語の(^_-)-☆中にある(^_-)-☆顔文字を(ﾟДﾟ)ﾉ ｧｨ爆裂";
+$haystack = "日本語の(^^;)(^_-)-☆中にある(^_-)-☆顔文字を(ﾟДﾟ)ﾉ ｧｨ爆裂";
 $file = "kaomoji.txt";
+$refile = "regex.txt";
 
-$array = croco_explosion($haystack, $file);
+$array = croco_explosion($haystack, $file, $refile);
 
 foreach ($array as $line){
     echo $line['sentence'];
-    echo $line['needed'] ? '  (*)':'';
+    if (EXPLOSION_TYPE_NONE == $line['type']) {
+        echo " <<< マッチしていない文字列"
+    } else if(EXPLOSION_TYPE_FIND == $line['type']) {
+        echo " <<< 完全一致した文字列"
+    } else if(EXPLOSION_TYPE_REGEX == $line['type']) {
+        echo " <<< 正規表現で一致した文字列"
+    }
     echo "\n";
 }
 
@@ -46,13 +58,14 @@ foreach ($array as $line){
 
 
 ```
-日本語の
-(^_-)-☆  (*)
-中にある
-(^_-)-☆  (*)
-顔文字を
-(ﾟДﾟ)ﾉ ｧｨ  (*)
-爆裂
+日本語の <<< マッチしていない文字列
+(^^;) <<< 正規表現で一致した文字列
+(^_-)-☆ <<< 完全一致した文字列
+中にある <<< マッチしていない文字列
+(^_-)-☆ <<< 完全一致した文字列
+顔文字を <<< マッチしていない文字列
+(ﾟДﾟ)ﾉ ｧｨ <<< 完全一致した文字列
+爆裂 <<< マッチしていない文字列
 ```
 -----
 
