@@ -42,13 +42,13 @@ $refile = "regex.txt";
 
 $array = croco_explosion($haystack, $file, $refile);
 
-foreach ($array as $line){
-    echo $line['sentence'];
-    if (EXPLOSION_TYPE_NONE == $line['type']) {
+foreach ($array as $node){
+    echo $node['sentence'];
+    if (EXPLOSION_TYPE_NONE == $node['type']) {
         echo " <<< マッチしていない文字列"
-    } else if(EXPLOSION_TYPE_FIND == $line['type']) {
+    } else if(EXPLOSION_TYPE_FIND == $node['type']) {
         echo " <<< 完全一致した文字列"
-    } else if(EXPLOSION_TYPE_REGEX == $line['type']) {
+    } else if(EXPLOSION_TYPE_REGEX == $node['type']) {
         echo " <<< 正規表現で一致した文字列"
     }
     echo "\n";
