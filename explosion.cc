@@ -96,12 +96,14 @@ nlohmann::json explosion::explode()
     int idx = 0;
     std::size_t position = 0;
     for (auto &node :_pieces) {
-        if (position < node.first) {
-            pieces[idx]["sentence"] = _haystack.substr(
-                position, node.first - position
-            );
-            pieces[idx]["type"] = TYPE_NONE;
-            idx++;
+        if (position <= node.first) {
+            if (node.first - position) {
+                pieces[idx]["sentence"] = _haystack.substr(
+                    position, node.first - position
+                );
+                pieces[idx]["type"] = TYPE_NONE;
+                idx++;
+            }
 
             pieces[idx]["sentence"] = _haystack.substr(
                 node.first, node.second.length
