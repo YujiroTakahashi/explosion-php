@@ -62,56 +62,46 @@ print_r($array);
 ```
 日本語の <<< マッチしていない文字列
 (^^;) <<< 正規表現で一致した文字列
+(^_-)-☆ <<< 完全一致した文字列
 中にある <<< マッチしていない文字列
 (^_-)-☆ <<< 完全一致した文字列
 顔文字を <<< マッチしていない文字列
 (ﾟДﾟ)ﾉ ｧｨ <<< 完全一致した文字列
 爆裂 <<< マッチしていない文字列
 
-Array
-(
-    [0] => Array
-        (
-            [sentence] => 日本語の
-            [type] => 0
-        )
-
-    [1] => Array
-        (
-            [sentence] => (^^;)
-            [type] => 2
-        )
-
-    [2] => Array
-        (
-            [sentence] => 中にある
-            [type] => 0
-        )
-
-    [3] => Array
-        (
-            [sentence] => (^_-)-☆
-            [type] => 1
-        )
-
-    [4] => Array
-        (
-            [sentence] => 顔文字を
-            [type] => 0
-        )
-
-    [5] => Array
-        (
-            [sentence] => (ﾟДﾟ)ﾉ ｧｨ
-            [type] => 1
-        )
-
-    [6] => Array
-        (
-            [sentence] => 爆裂
-            [type] => 0
-        )
-
+Array(
+    [0] => Array(
+        [sentence] => 日本語の
+        [type] => 0
+    )
+    [1] => Array(
+        [sentence] => (^^;)
+        [type] => 2
+    )
+    [2] => Array(
+        [sentence] => (^_-)-☆
+        [type] => 1
+    )
+    [3] => Array(
+        [sentence] => 中にある
+        [type] => 0
+    )
+    [4] => Array(
+        [sentence] => (^_-)-☆
+        [type] => 1
+    )
+    [5] => Array(
+        [sentence] => 顔文字を
+        [type] => 0
+    )
+    [6] => Array(
+        [sentence] => (ﾟДﾟ)ﾉ ｧｨ
+        [type] => 1
+    )
+    [7] => Array(
+        [sentence] => 爆裂
+        [type] => 0
+    )
 )
 ```
 -----
