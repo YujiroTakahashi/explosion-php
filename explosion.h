@@ -17,7 +17,7 @@ class explosion {
 public:
     enum {
         TYPE_NONE,
-        TYPE_MATCH,
+        TYPE_FIND,
         TYPE_REGEX
     };
     typedef struct _Node {

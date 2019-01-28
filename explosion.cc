@@ -74,7 +74,7 @@ void explosion::findMatch(const std::string file)
                     needle, 
                     position, 
                     length,
-                    TYPE_MATCH
+                    TYPE_FIND
                 };
                 _pieces.insert(std::make_pair(position, node));
                 position = _haystack.find(needle, position + length);
