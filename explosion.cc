@@ -92,14 +92,14 @@ nlohmann::json explosion::explode()
     for (auto &node :_pieces) {
         if (position <= node.first) {
             if (node.first - position) {
-                pieces[idx]["sentence"] = _haystack.substr(
+                pieces[idx]["surface"] = _haystack.substr(
                     position, node.first - position
                 );
                 pieces[idx]["type"] = TYPE_NONE;
                 idx++;
             }
 
-            pieces[idx]["sentence"] = _haystack.substr(
+            pieces[idx]["surface"] = _haystack.substr(
                 node.first, node.second.length
             );
             pieces[idx]["type"] = node.second.type;
@@ -109,7 +109,7 @@ nlohmann::json explosion::explode()
     } // for (auto &node :_pieces)
 
     if (_haystack.length() > position) {
-        pieces[idx]["sentence"] = _haystack.substr(position);
+        pieces[idx]["surface"] = _haystack.substr(position);
         pieces[idx]["type"] = TYPE_NONE;
     }
 
