@@ -53,7 +53,7 @@ $refile = "regex.txt";
 $array = croco_explosion($haystack, $file, $refile);
 
 foreach ($array as $node){
-    echo $node['sentence'];
+    echo $node['surface'];
     if (EXPLOSION_TYPE_NONE == $node['type']) {
         echo " <<< マッチしていない文字列";
     } else if(EXPLOSION_TYPE_FIND == $node['type']) {
@@ -81,35 +81,35 @@ print_r($array);
 
 Array(
     [0] => Array(
-        [sentence] => 日本語の
+        [surface] => 日本語の
         [type] => 0
     )
     [1] => Array(
-        [sentence] => (^^;)
+        [surface] => (^^;)
         [type] => 2
     )
     [2] => Array(
-        [sentence] => (^_-)-☆
+        [surface] => (^_-)-☆
         [type] => 1
     )
     [3] => Array(
-        [sentence] => 中にある
+        [surface] => 中にある
         [type] => 0
     )
     [4] => Array(
-        [sentence] => (^_-)-☆
+        [surface] => (^_-)-☆
         [type] => 1
     )
     [5] => Array(
-        [sentence] => 顔文字を
+        [surface] => 顔文字を
         [type] => 0
     )
     [6] => Array(
-        [sentence] => (ﾟДﾟ)ﾉ ｧｨ
+        [surface] => (ﾟДﾟ)ﾉ ｧｨ
         [type] => 1
     )
     [7] => Array(
-        [sentence] => 爆裂
+        [surface] => 爆裂
         [type] => 0
     )
 )
@@ -129,19 +129,19 @@ print_r($array);
 ```
 Array(
     [0] => Array(
-        [sentence] => いろはに
+        [surface] => いろはに
         [type] => 2
     )
     [1] => Array(
-        [sentence] => ほへと、
+        [surface] => ほへと、
         [type] => 0
     )
     [2] => Array(
-        [sentence] => ちりぬる
+        [surface] => ちりぬる
         [type] => 2
     )
     [3] => Array(
-        [sentence] => を
+        [surface] => を
         [type] => 0
     )
 )
