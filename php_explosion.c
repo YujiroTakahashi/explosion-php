@@ -31,8 +31,7 @@ PHP_INI_END()
    purposes. */
 
 /* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_explosion_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
+/* {{{ proto array croco_explosion(string haystack, string file[, string regfile]) */
 PHP_FUNCTION(croco_explosion)
 {
 	char *haystack = NULL;
@@ -68,11 +67,33 @@ PHP_FUNCTION(croco_explosion)
 	ExplosionFree(handle);
 }
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and
-   unfold functions in source code. See the corresponding marks just before
-   function definition, where the functions purpose is also documented. Please
-   follow this convention for the convenience of others editing your code.
-*/
+
+/* {{{ proto array croco_explosionRe(string haystack, string pattern) */
+PHP_FUNCTION(croco_explosionRe)
+{
+	char *haystack = NULL;
+	size_t haystack_len;
+	char *pattern = NULL;
+	size_t pattern_len;
+
+	ExplosionHandle handle;
+	EPStr json;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss|s", &haystack, &haystack_len, &pattern, &pattern_len) == FAILURE) {
+		return;
+	}
+
+	handle = ExplosionCreate(haystack);
+	ExplosionRegexSearch(handle, pattern);
+	json = ExplosionExplode(handle);
+
+	array_init(return_value);
+	php_json_decode(return_value, json->buff, json->len, 1, PHP_JSON_PARSER_DEFAULT_DEPTH);
+
+	ExplosionFreeText(json);
+	ExplosionFree(handle);
+}
+/* }}} */
 
 
 /* {{{ php_explosion_init_globals
@@ -149,9 +170,15 @@ PHP_MINFO_FUNCTION(explosion)
 
 /* {{{ arginfo
  */
-ZEND_BEGIN_ARG_INFO(arginfo_explosion, 0)
+ZEND_BEGIN_ARG_INFO(arginfo_explosion, 2)
 	ZEND_ARG_INFO(0, haystack)
 	ZEND_ARG_INFO(0, file)
+	ZEND_ARG_INFO(0, reges_file)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_explosion_re, 2)
+	ZEND_ARG_INFO(0, haystack)
+	ZEND_ARG_INFO(0, pattern)
 ZEND_END_ARG_INFO()
 /* }}} */
 
@@ -160,7 +187,8 @@ ZEND_END_ARG_INFO()
  * Every user visible function must have an entry in explosion_functions[].
  */
 const zend_function_entry explosion_functions[] = {
-	PHP_FE(croco_explosion,	arginfo_explosion)		/* For testing, remove later. */
+	PHP_FE(croco_explosion,	  arginfo_explosion)
+	PHP_FE(croco_explosionRe, arginfo_explosion_re)
 	PHP_FE_END	/* Must be the last line in explosion_functions[] */
 };
 /* }}} */

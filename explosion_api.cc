@@ -53,6 +53,21 @@ void ExplosionFreeText(EPStr handle)
  *
  * @access public
  * @param  ExplosionHandle handle
+ * @param  const char *pattern
+ * @return void
+ */
+void ExplosionRegexSearch(ExplosionHandle handle, const char *pattern)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+
+    explode->regexSearch(std::string(pattern));
+}
+
+/**
+ * 正規表現検索
+ *
+ * @access public
+ * @param  ExplosionHandle handle
  * @param  const char *file
  * @return void
  */

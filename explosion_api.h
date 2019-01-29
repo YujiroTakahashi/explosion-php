@@ -36,6 +36,7 @@ typedef void *ExplosionHandle;
 EXPLOSION_API ExplosionHandle ExplosionCreate(const char *haystack);
 EXPLOSION_API void ExplosionFree(ExplosionHandle handle);
 EXPLOSION_API void ExplosionFreeText(EPStr handle);
+EXPLOSION_API void ExplosionRegexSearch(ExplosionHandle handle, const char *pattern);
 EXPLOSION_API void ExplosionRegexMatch(ExplosionHandle handle, const char *file);
 EXPLOSION_API void ExplosionFindMatch(ExplosionHandle handle, const char *file);
 EXPLOSION_API EPStr ExplosionExplode(ExplosionHandle handle);

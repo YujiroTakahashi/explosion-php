@@ -1,4 +1,3 @@
-#include <iostream>
 #include "explosion.h"
 
 namespace croco {
@@ -16,6 +15,18 @@ explosion::explosion(const std::string haystack)
 }
 
 /**
+ * 直接正規表現
+ *
+ * @access public
+ * @param  const std::string pattern
+ */
+void explosion::regexSearch(const std::string pattern)
+{
+    _regexSearch(pattern);
+}
+
+
+/**
  * 正規表現
  *
  * @access public
@@ -30,24 +41,7 @@ void explosion::regexMatch(const std::string file)
 
     std::string pattern;
     while (std::getline(ifs, pattern)) {
-        if (pattern.length()) {
-            std::regex reg(pattern);
-            std::sregex_iterator it(std::begin(_haystack), std::end(_haystack), reg);
-            std::sregex_iterator end;
-
-            for (; it != end; ++it) {
-                auto&& match = *it;
-                std::size_t position = static_cast<std::size_t>(match.position());
-                std::size_t length = static_cast<std::size_t>(match.length());
-                Node node = {
-                    match.str(),
-                    position,
-                    length,
-                    TYPE_REGEX
-                };
-                _pieces.insert(std::make_pair(position, node));
-            }
-        } // if (pattern.length())
+        _regexSearch(pattern);
     } // while (std::getline(ifs, pattern))
 }
 
@@ -121,5 +115,39 @@ nlohmann::json explosion::explode()
 
     return pieces;
 }
+
+/**
+ * 直接正規表現
+ *
+ * @access private
+ * @param  const std::string pattern
+ */
+void explosion::_regexSearch(const std::string pattern)
+{
+    if (0 >= pattern.length()) {
+        return ;
+    }
+
+    re2::RE2 reg(pattern);
+    re2::StringPiece input(_haystack);
+    std::string sentence;
+    std::size_t position = 0;
+
+    while (re2::RE2::FindAndConsume(&input, reg, &sentence)) {
+        std::size_t length = sentence.length();
+        position = _haystack.find(sentence, position);
+
+        Node node = {
+            sentence,
+            position,
+            length,
+            TYPE_REGEX
+        };
+        _pieces.insert(std::make_pair(position, node));
+
+        position = position + length;
+    }
+}
+
 
 } // namespace croco
