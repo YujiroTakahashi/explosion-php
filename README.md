@@ -3,8 +3,8 @@ Explosive analysis tool
 
 ## Requirements
 
-PHP 7.x  
-RE2 shard object  
+* PHP 7.x
+* [RE2 shard object](https://github.com/google/re2)
 
 ```
 $ sudo apt install libre2-4 libre2-dev
@@ -40,6 +40,7 @@ edit your php.ini and add:
 ```php
 (\([^\)]+\))
 ```
+(RE2 style regular expression)
 
 *sample.php*
 
@@ -115,8 +116,6 @@ Array(
 ```
 -----
 
-
------
 
 ### array croco_explosionRe(string haystack, string pattern)
 
