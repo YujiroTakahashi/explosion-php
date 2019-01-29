@@ -1,5 +1,14 @@
 # explosion-php
-エクスプロージョン！
+Explosive analysis tool
+
+## Requirements
+
+PHP 7.x  
+RE2 shard object  
+
+```
+$ sudo apt install libre2-4 libre2-dev
+```
 
 ## Building explosion for PHP
 
@@ -29,7 +38,7 @@ edit your php.ini and add:
 
 *regex.txt*
 ```php
-\([^\)]+\)
+(\([^\)]+\))
 ```
 
 *sample.php*
@@ -102,6 +111,40 @@ Array(
         [sentence] => 爆裂
         [type] => 0
     )
+)
+```
+-----
+
+
+-----
+
+### array croco_explosionRe(string haystack, string pattern)
+
+```php
+$haystack = "いろはにほへと、ちりぬるを";
+$array = croco_explosionRe($haystack, "([^、]{4})");
+
+print_r($array);
+```
+
+```
+Array(
+    [0] => Array(
+        [sentence] => いろはに
+        [type] => 2
+    )
+    [1] => Array(
+        [sentence] => ほへと、
+        [type] => 0
+    )
+    [2] => Array(
+        [sentence] => ちりぬる
+        [type] => 2
+    )
+    [3] => Array(
+        [sentence] => を
+        [type] => 0
+    )
 )
 ```
 -----
