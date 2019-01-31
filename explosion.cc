@@ -229,13 +229,14 @@ nlohmann::json explosion::_getNode(const std::string surface, const int type, in
     node["from"]["line"] = no;
     node["from"]["ch"] = _utf8_strlen(text);
 
-    std::string::size_type pos = surface.find('\n');
+    std::string::size_type last, pos = surface.find('\n');
     if (pos != std::string::npos) {
         while (pos != std::string::npos) {
+            last = pos;
             pos = surface.find('\n', pos + 1);
             no++;
         }
-        text = surface.substr(pos + 1);
+        text = surface.substr(last + 1);
     } else {
         text = text + surface;
     }
