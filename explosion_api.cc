@@ -6,15 +6,25 @@
 using namespace croco;
 
 /**
+ * get Explosion size
+ *
+ * @access public
+ * @return int
+ */
+int ExplosionSize()
+{
+    return sizeof(explosion);
+}
+
+/**
  * create a Explosion handle
  *
  * @access public
- * @param  const char *haystack
  * @return ExplosionHandle
  */
-ExplosionHandle ExplosionCreate(const char *haystack)
+ExplosionHandle ExplosionCreate()
 {
-    ExplosionHandle handle = new explosion(std::string(haystack));
+    ExplosionHandle handle = new explosion();
     return handle;
 }
 
@@ -49,6 +59,36 @@ void ExplosionFreeText(EPStr handle)
 }
 
 /**
+ * 対象文字列の設定
+ *
+ * @access public
+ * @param  ExplosionHandle handle
+ * @param  const char *haystack
+ * @return void
+ */
+void ExplosionSetHaystack(ExplosionHandle handle, const char *haystack)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+
+    explode->setHaystack(std::string(haystack));
+}
+
+/**
+ * 辞書の読み込み設定
+ *
+ * @access public
+ * @param  ExplosionHandle handle
+ * @param  const char *pattern
+ * @return void
+ */
+void ExplosionLoad(ExplosionHandle handle, const char *key, const char *file)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+
+    explode->load(std::string(key), std::string(file));
+}
+
+/**
  * 正規表現検索
  *
  * @access public
@@ -68,14 +108,14 @@ void ExplosionRegexSearch(ExplosionHandle handle, const char *pattern)
  *
  * @access public
  * @param  ExplosionHandle handle
- * @param  const char *file
+ * @param  const char *key
  * @return void
  */
-void ExplosionRegexMatch(ExplosionHandle handle, const char *file)
+void ExplosionRegexMatch(ExplosionHandle handle, const char *key)
 {
     explosion *explode = static_cast<explosion*>(handle);
 
-    explode->regexMatch(std::string(file));
+    explode->regexMatch(std::string(key));
 }
 
 /**
@@ -83,14 +123,14 @@ void ExplosionRegexMatch(ExplosionHandle handle, const char *file)
  *
  * @access public
  * @param  ExplosionHandle handle
- * @param  const char *file
+ * @param  const char *key
  * @return void
  */
-void ExplosionFindMatch(ExplosionHandle handle, const char *file)
+void ExplosionFindMatch(ExplosionHandle handle, const char *key)
 {
     explosion *explode = static_cast<explosion*>(handle);
 
-    explode->findMatch(std::string(file));
+    explode->findMatch(std::string(key));
 }
 
 /**

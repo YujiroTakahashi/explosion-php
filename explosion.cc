@@ -3,15 +3,44 @@
 namespace croco {
 
 /**
- * コンストラクタ
+ * 直接正規表現
  *
  * @access public
- * @param  const std::string haystack
- * @param  const std::string file
+ * @param  const std::string pattern
  */
-explosion::explosion(const std::string haystack)
+void explosion::setHaystack(const std::string haystack)
 {
     _haystack = haystack;
+    _pieces.clear();
+}
+
+/**
+ * 直接正規表現
+ *
+ * @access public
+ * @param  const std::string pattern
+ */
+void explosion::load(const std::string key, const std::string file)
+{
+
+    std::ifstream ifs(file);
+    if (ifs.fail()) {
+        return ;
+    }
+
+    std::vector<std::string> dictionary;
+    std::string node;
+    while (std::getline(ifs, node)) {
+        if (node.length()) {
+            dictionary.push_back(node);
+        } // if (node.length())
+    } // while (std::getline(ifs, node))
+
+    if (!dictionary.size()) {
+        return ;
+    }
+
+    _dictionaries.insert(std::make_pair(key, dictionary));
 }
 
 /**
@@ -32,15 +61,14 @@ void explosion::regexSearch(const std::string pattern)
  * @access public
  * @param  const std::string file
  */
-void explosion::regexMatch(const std::string file)
+void explosion::regexMatch(const std::string key)
 {
-    std::ifstream ifs(file);
-    if (ifs.fail()) {
+    if (_dictionaries.find(key) == _dictionaries.end()) {
         return ;
     }
+    std::vector<std::string> dictionary = _dictionaries.at(key);
 
-    std::string pattern;
-    while (std::getline(ifs, pattern)) {
+    for (auto &pattern : dictionary) {
         _regexSearch(pattern);
     } // while (std::getline(ifs, pattern))
 }
@@ -51,30 +79,27 @@ void explosion::regexMatch(const std::string file)
  * @access public
  * @param  const std::string file
  */
-void explosion::findMatch(const std::string file)
+void explosion::findMatch(const std::string key)
 {
-    std::ifstream ifs(file);
-    if (ifs.fail()) {
+    if (_dictionaries.find(key) == _dictionaries.end()) {
         return ;
     }
+    std::vector<std::string> dictionary = _dictionaries.at(key);
 
-    std::string needle;
-    while (std::getline(ifs, needle)) {
-        if (needle.length()) {
-            std::size_t length = needle.length();
-            std::size_t position = _haystack.find(needle);
-            while (position != std::string::npos) {
-                Node node = {
-                    needle, 
-                    position, 
-                    length,
-                    TYPE_FIND
-                };
-                _pieces.insert(std::make_pair(position, node));
-                position = _haystack.find(needle, position + length);
-            }
-        } // if (needle.length())
-    } // while (std::getline(ifs, needle))
+    for (auto &needle : dictionary) {
+        std::size_t length = needle.length();
+        std::size_t position = _haystack.find(needle);
+        while (position != std::string::npos) {
+            Node node = {
+                needle, 
+                position, 
+                length,
+                TYPE_FIND
+            };
+            _pieces.insert(std::make_pair(position, node));
+            position = _haystack.find(needle, position + length);
+        }
+    } // for (auto &needle : dictionary)
 }
 
 /**

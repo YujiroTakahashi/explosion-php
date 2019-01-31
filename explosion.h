@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <re2/re2.h>
@@ -31,12 +32,14 @@ public:
 private:
     pieces_t _pieces;
     std::string _haystack;
+    std::unordered_map<std::string, std::vector<std::string>> _dictionaries;
 
 public:
-	explosion(const std::string haystack);
+    void setHaystack(const std::string haystack);
+    void load(const std::string key, const std::string file);
     void regexSearch(const std::string pattern);
-	void regexMatch(const std::string file);
-    void findMatch(const std::string file);
+	void regexMatch(const std::string key);
+    void findMatch(const std::string key);
 	nlohmann::json explode();
 
 private:
