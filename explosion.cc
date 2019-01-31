@@ -115,30 +115,43 @@ nlohmann::json explosion::explode()
 {
     nlohmann::json pieces;
 
-    int idx = 0;
+    int idx = 0, no = 0;
+    std::string text("");
     std::size_t position = 0;
     for (auto &node :_pieces) {
         if (position <= node.first) {
             if (node.first - position) {
-                pieces[idx]["surface"] = _haystack.substr(
+                std::string surface = _haystack.substr(
                     position, node.first - position
                 );
-                pieces[idx]["type"] = TYPE_NONE;
+                pieces[idx] = _getNode(
+                    surface, 
+                    TYPE_NONE, 
+                    no, 
+                    text
+                );
                 idx++;
             }
 
-            pieces[idx]["surface"] = _haystack.substr(
-                node.first, node.second.length
-            );
-            pieces[idx]["type"] = node.second.type;
-            idx++;
+            {
+                std::string surface = _haystack.substr(
+                    node.first, node.second.length
+                );
+                pieces[idx] = _getNode(
+                    surface, 
+                    node.second.type, 
+                    no, 
+                    text
+                );
+                idx++;
+            }
         }
         position = node.first + node.second.length;
     } // for (auto &node :_pieces)
 
     if (_haystack.length() > position) {
-        pieces[idx]["surface"] = _haystack.substr(position);
-        pieces[idx]["type"] = TYPE_NONE;
+        std::string surface = _haystack.substr(position);
+        pieces[idx] = _getNode(surface, TYPE_NONE, no, text);
     }
 
     return pieces;
@@ -177,5 +190,59 @@ void explosion::_regexSearch(const std::string pattern)
     }
 }
 
+/**
+ * utf8文字数カウンタ
+ *
+ * @access private
+ * @param  const std::string pattern
+ * @return int
+ */
+int explosion::_utf8_strlen(const std::string word)
+{
+    int length = 0;
+    for (int pos = 0; pos < word.size();) {
+        uint8_t hex = static_cast<uint8_t>(word[pos]);
+        pos += (hex < 0x80) ? 1 :
+               (hex < 0xE0) ? 2 :
+               (hex < 0xF0) ? 3 : 4;
+        length += 1;
+    }
+
+    return length;
+}
+
+/**
+ * ノード情報の成形取得
+ *
+ * @access private
+ * @param  const std::string surface
+ * @param  const int type
+ * @param  int &no
+ * @return int
+ */
+nlohmann::json explosion::_getNode(const std::string surface, const int type, int &no, std::string &text)
+{
+    nlohmann::json node;
+
+    node["surface"] = surface;
+    node["type"] = type;
+    node["from"]["line"] = no;
+    node["from"]["ch"] = _utf8_strlen(text);
+
+    std::string::size_type pos = surface.find('\n');
+    if (pos != std::string::npos) {
+        while (pos != std::string::npos) {
+            pos = surface.find('\n', pos + 1);
+            no++;
+        }
+        text = surface.substr(pos + 1);
+    } else {
+        text = text + surface;
+    }
+    node["to"]["line"] = no;
+    node["to"]["ch"] = _utf8_strlen(text);
+
+    return node;
+}
 
 } // namespace croco

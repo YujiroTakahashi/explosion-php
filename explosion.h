@@ -44,6 +44,8 @@ public:
 
 private:
     void _regexSearch(const std::string pattern);
+    int _utf8_strlen(const std::string word);
+    nlohmann::json _getNode(const std::string surface, const int type, int &no, std::string &text);
 }; // class explosion
 
 } // namespace croco
