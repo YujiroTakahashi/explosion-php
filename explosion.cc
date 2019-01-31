@@ -22,6 +22,9 @@ void explosion::setHaystack(const std::string haystack)
  */
 void explosion::load(const std::string key, const std::string file)
 {
+    if (_dictionaries.find(key) != _dictionaries.end()) {
+        return ;
+    }
 
     std::ifstream ifs(file);
     if (ifs.fail()) {

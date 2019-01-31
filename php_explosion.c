@@ -216,6 +216,11 @@ PHP_MINIT_FUNCTION(explosion)
 	explosion_object_handlers.free_obj = php_explosion_object_free_storage;
 	php_explosion_sc_entry = zend_register_internal_class(&ce);
 
+
+	REGISTER_LONG_CONSTANT("Croco\\EXPLOSION_TYPE_NONE",  0, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("Croco\\EXPLOSION_TYPE_FIND",  1, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("Croco\\EXPLOSION_TYPE_REGEX",  2, CONST_CS | CONST_PERSISTENT);
+
 	REGISTER_INI_ENTRIES();
 
 	return SUCCESS;
