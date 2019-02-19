@@ -1,7 +1,18 @@
 # explosion-php
 Explosive analysis tool
 
-## Requirements
+## Index
+
+---
++ [Requirements](#doc_001)
++ [Building explosion for PHP](#doc_002)
++ [Class synopsis](#doc_003)
++ [\Croco\Explosion::explode](#doc_004)
++ [\Croco\Explosion::explodeRe](#doc_005)
+
+---
+
+## <a name="doc_001">Requirements
 
 * PHP 7.x
 * [RE2 shard object](https://github.com/google/re2)
@@ -10,7 +21,7 @@ Explosive analysis tool
 $ sudo apt install libre2-4 libre2-dev
 ```
 
-## Building explosion for PHP
+## <a name="doc_002">Building explosion for PHP
 
 ```
 $ cd explosion-php
@@ -25,7 +36,19 @@ edit your php.ini and add:
 
 -----
 
-### array Explosion::explode(string haystack, string findKey[, string regexKey])
+## <a name="doc_003">Class synopsis
+
+```php
+\Croco\Explosion {
+    public __construct ( void )
+    public int load ( string key, string filename )
+    public int explode ( string haystack, string load_key_find[, string load_key_pattern] )
+    public int explodeRe ( string haystack, string pattern )
+}
+```
+---
+
+## <a name="doc_004">array \Croco\Explosion::explode(string haystack, string findKey[, string regexKey])
 
 *kaomoji.txt*
 ```php
@@ -189,7 +212,7 @@ Array(
 -----
 
 
-### array Explosion::explodeRe(string haystack, string pattern)
+## <a name="doc_005">array \Croco\Explosion::explodeRe(string haystack, string pattern)
 
 ```php
 $haystack = "いろはにほへと、ちりぬるを";
@@ -213,6 +236,6 @@ foreach ($pieces as $piece) {
 
 ### 定数
 
-  * `\croco\EXPLOSION_TYPE_NONE =  0` 　　マッチしていない文字列
-  * `\croco\EXPLOSION_TYPE_FIND =  1` 　　完全一致した文字列
-  * `\croco\EXPLOSION_TYPE_REGEX =  2` 　　正規表現で一致した文字列
+  * `\Croco\EXPLOSION_TYPE_NONE =  0` 　　マッチしていない文字列
+  * `\Croco\EXPLOSION_TYPE_FIND =  1` 　　完全一致した文字列
+  * `\Croco\EXPLOSION_TYPE_REGEX =  2` 　　正規表現で一致した文字列
