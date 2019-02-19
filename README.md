@@ -43,9 +43,9 @@ edit your php.ini and add:
 ```php
 \Croco\Explosion {
     public __construct ( void )
-    public int load ( string key, string filename )
-    public int explode ( string haystack, string load_key_find[, string load_key_pattern] )
-    public int explodeRe ( string haystack, string pattern )
+    public load ( string key, string filename )
+    public array explode ( string haystack, string load_key_find[, string load_key_pattern] )
+    public array explodeRe ( string haystack, string pattern )
 }
 ```
 ---
