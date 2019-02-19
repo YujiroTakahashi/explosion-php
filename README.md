@@ -9,6 +9,7 @@ Explosive analysis tool
 + [Class synopsis](#doc_003)
 + [\Croco\Explosion::explode](#doc_004)
 + [\Croco\Explosion::explodeRe](#doc_005)
++ [Predefined Constants](#doc_006)
 
 ---
 
@@ -234,8 +235,36 @@ foreach ($pieces as $piece) {
 -----
 
 
-### 定数
+## <a name="doc_006">Predefined Constants
 
   * `\Croco\EXPLOSION_TYPE_NONE =  0` 　　マッチしていない文字列
   * `\Croco\EXPLOSION_TYPE_FIND =  1` 　　完全一致した文字列
   * `\Croco\EXPLOSION_TYPE_REGEX =  2` 　　正規表現で一致した文字列
+
+
+## <a name="doc_007">Return Values
+
+|surface|文字列|
+|type|判定番号|
+|from|発見した開始位置|
+|to|発見した終始位置|
+
+```javascript
+Array(
+    [0] => Array(
+        [surface] => 日本語の
+        [type] => 0
+        [from] => Array(
+            [ch] => 0
+            [line] => 0
+        )
+        [to] => Array(
+            [ch] => 4
+            [line] => 0
+        )
+    )
+    :
+    :
+    :
+)
+```
