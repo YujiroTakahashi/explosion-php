@@ -10,6 +10,7 @@ Explosive analysis tool
 + [\Croco\Explosion::explode](#doc_004)
 + [\Croco\Explosion::explodeRe](#doc_005)
 + [Predefined Constants](#doc_006)
++ [Return Values](#doc_007)
 
 ---
 
@@ -244,10 +245,12 @@ foreach ($pieces as $piece) {
 
 ## <a name="doc_007">Return Values
 
-|surface|文字列|
-|type|判定番号|
-|from|発見した開始位置|
-|to|発見した終始位置|
+| Column  | Description   |
+|:-------:|:--------------|
+| surface | 文字列         |
+| type    | 判定番号        |
+| from    | 発見した開始位置 |
+| to      | 発見した終始位置 |
 
 ```javascript
 Array(
