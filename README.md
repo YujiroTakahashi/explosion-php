@@ -25,7 +25,7 @@ edit your php.ini and add:
 
 -----
 
-### array croco_explosion(string haystack, string file[, string regex_file])
+### array Explosion::explode(string haystack, string findKey[, string regexKey])
 
 *kaomoji.txt*
 ```php
@@ -45,7 +45,6 @@ edit your php.ini and add:
 *sample.php*
 
 ```php
-<?php
 $haystack = "日本語の(^^;)(^_-)-☆中にある(^_-)-☆顔文字を(ﾟДﾟ)ﾉ ｧｨ爆裂";
 
 $explosion = new \Croco\Explosion();
@@ -190,40 +189,30 @@ Array(
 -----
 
 
-### array croco_explosionRe(string haystack, string pattern)
+### array Explosion::explodeRe(string haystack, string pattern)
 
 ```php
 $haystack = "いろはにほへと、ちりぬるを";
-$array = croco_explosionRe($haystack, "([^、]{4})");
 
-print_r($array);
+$explosion = new \Croco\Explosion();
+$pieces = $explosion->explodeRe($haystack, "([^、]{4})");
+
+foreach ($pieces as $piece) {
+    echo $piece['surface']."\n";
+}
 ```
 
 ```
-Array(
-    [0] => Array(
-        [surface] => いろはに
-        [type] => 2
-    )
-    [1] => Array(
-        [surface] => ほへと、
-        [type] => 0
-    )
-    [2] => Array(
-        [surface] => ちりぬる
-        [type] => 2
-    )
-    [3] => Array(
-        [surface] => を
-        [type] => 0
-    )
-)
+いろはに
+ほへと、
+ちりぬる
+を
 ```
 -----
 
 
 ### 定数
 
-  * `EXPLOSION_TYPE_NONE =  0` 　　マッチしていない文字列
-  * `EXPLOSION_TYPE_FIND =  1` 　　完全一致した文字列
-  * `EXPLOSION_TYPE_REGEX =  2` 　　正規表現で一致した文字列
+  * `\croco\EXPLOSION_TYPE_NONE =  0` 　　マッチしていない文字列
+  * `\croco\EXPLOSION_TYPE_FIND =  1` 　　完全一致した文字列
+  * `\croco\EXPLOSION_TYPE_REGEX =  2` 　　正規表現で一致した文字列
