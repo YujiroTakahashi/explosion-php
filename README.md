@@ -47,25 +47,34 @@ edit your php.ini and add:
 ```php
 <?php
 $haystack = "日本語の(^^;)(^_-)-☆中にある(^_-)-☆顔文字を(ﾟДﾟ)ﾉ ｧｨ爆裂";
-$file = "kaomoji.txt";
-$refile = "regex.txt";
 
-$array = croco_explosion($haystack, $file, $refile);
+$explosion = new \Croco\Explosion();
 
-foreach ($array as $node){
+/* 同じキーによる再読込は行われない */
+$explosion->load('find:Kaomoji', 'kaomoji.txt');
+$explosion->load('regex:Kaomoji', 'regex.txt');
+
+/* エクスプロージョンによる文字列分解 */
+$pieces = $explosion->explode(
+    $haystack,
+    'find:Kaomoji',
+    'regex:Kaomoji'
+);
+
+foreach ($pieces as $node){
     echo $node['surface'];
-    if (EXPLOSION_TYPE_NONE == $node['type']) {
+    if (\Croco\EXPLOSION_TYPE_NONE == $node['type']) {
         echo " <<< マッチしていない文字列";
-    } else if(EXPLOSION_TYPE_FIND == $node['type']) {
+    } else if(\Croco\EXPLOSION_TYPE_FIND == $node['type']) {
         echo " <<< 完全一致した文字列";
-    } else if(EXPLOSION_TYPE_REGEX == $node['type']) {
+    } else if(\Croco\EXPLOSION_TYPE_REGEX == $node['type']) {
         echo " <<< 正規表現で一致した文字列";
     }
     echo "\n";
 }
 echo "\n";
 
-print_r($array);
+print_r($pieces);
 ```
 
 
@@ -80,38 +89,102 @@ print_r($array);
 爆裂 <<< マッチしていない文字列
 
 Array(
-    [0] => Array(
-        [surface] => 日本語の
-        [type] => 0
-    )
-    [1] => Array(
-        [surface] => (^^;)
-        [type] => 2
-    )
-    [2] => Array(
-        [surface] => (^_-)-☆
-        [type] => 1
-    )
-    [3] => Array(
-        [surface] => 中にある
-        [type] => 0
-    )
-    [4] => Array(
-        [surface] => (^_-)-☆
-        [type] => 1
-    )
-    [5] => Array(
-        [surface] => 顔文字を
-        [type] => 0
-    )
-    [6] => Array(
-        [surface] => (ﾟДﾟ)ﾉ ｧｨ
-        [type] => 1
-    )
-    [7] => Array(
-        [surface] => 爆裂
-        [type] => 0
-    )
+    [0] => Array(
+        [from] => Array(
+            [ch] => 0
+            [line] => 0
+        )
+        [surface] => 日本語の
+        [to] => Array(
+            [ch] => 4
+            [line] => 0
+        )
+        [type] => 0
+    )
+    [1] => Array(
+        [from] => Array(
+            [ch] => 4
+            [line] => 0
+        )
+        [surface] => (^^;)
+        [to] => Array(
+            [ch] => 9
+            [line] => 0
+        )
+        [type] => 2
+    )
+    [2] => Array(
+        [from] => Array(
+            [ch] => 9
+            [line] => 0
+        )
+        [surface] => (^_-)-☆
+        [to] => Array(
+            [ch] => 16
+            [line] => 0
+        )
+        [type] => 1
+    )
+    [3] => Array(
+        [from] => Array(
+            [ch] => 16
+            [line] => 0
+        )
+        [surface] => 中にある
+        [to] => Array(
+            [ch] => 20
+            [line] => 0
+        )
+        [type] => 0
+    )
+    [4] => Array(
+        [from] => Array(
+            [ch] => 20
+            [line] => 0
+        )
+        [surface] => (^_-)-☆
+        [to] => Array(
+            [ch] => 27
+            [line] => 0
+        )
+        [type] => 1
+    )
+    [5] => Array(
+        [from] => Array(
+            [ch] => 27
+            [line] => 0
+        )
+        [surface] => 顔文字を
+        [to] => Array(
+            [ch] => 31
+            [line] => 0
+        )
+        [type] => 0
+    )
+    [6] => Array(
+        [from] => Array(
+            [ch] => 31
+            [line] => 0
+        )
+        [surface] => (ﾟДﾟ)ﾉ ｧｨ
+        [to] => Array(
+            [ch] => 40
+            [line] => 0
+        )
+        [type] => 1
+    )
+    [7] => Array(
+        [from] => Array(
+            [ch] => 40
+            [line] => 0
+        )
+        [surface] => 爆裂
+        [to] => Array(
+            [ch] => 42
+            [line] => 0
+        )
+        [type] => 0
+    )
 )
 ```
 -----
