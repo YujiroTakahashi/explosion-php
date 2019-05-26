@@ -41,11 +41,13 @@ public:
 	void regexMatch(const std::string key);
     void findMatch(const std::string key);
 	nlohmann::json explode();
+    std::vector<std::vector<std::string>> ngram(const std::string str, int n, int step);
 
 private:
     void _regexSearch(const std::string pattern);
     int _utf8_strlen(const std::string word);
     nlohmann::json _getNode(const std::string surface, const int type, int &no, std::string &text);
+    std::vector<std::string> _explode(const std::string str);
 }; // class explosion
 
 } // namespace croco
