@@ -1,3 +1,4 @@
+#include <iostream>
 #include "explosion.h"
 
 namespace croco {
@@ -158,6 +159,33 @@ nlohmann::json explosion::explode()
 }
 
 /**
+ * 
+ *
+ * @access private
+ * @param  const std::string pattern
+ */
+std::vector<std::vector<std::string>> explosion::ngram(const std::string str, int n, int step)
+{
+    std::vector<std::vector<std::string>> ngrams;
+
+    std::vector<std::string> list = _explode(str);
+
+    size_t max = list.size();
+
+    for (size_t row=0; row < max; row++) {
+        size_t nsize = (row + n > max) ? max - row : n;
+
+        std::vector<std::string> strs;
+        for (size_t idx = 0; idx < nsize; idx++) {
+            strs.push_back(list.at(row + idx));
+        }
+        ngrams.push_back(strs);
+    }
+
+    return ngrams;
+}
+
+/**
  * 直接正規表現
  *
  * @access private
@@ -244,6 +272,31 @@ nlohmann::json explosion::_getNode(const std::string surface, const int type, in
     node["to"]["ch"] = _utf8_strlen(text);
 
     return node;
+}
+
+/**
+ * 
+ *
+ * @access private
+ * @param  const std::string str
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> explosion::_explode(const std::string str)
+{
+    std::vector<std::string> result;
+
+    size_t pos = str.find(" ");
+    size_t last = 0;
+
+    while (pos != std::string::npos) {
+        size_t size = pos - last;
+        result.push_back(str.substr(last, size));
+
+        last = pos + 1;
+        pos = str.find(" ", pos + 1);
+    }
+
+    return result;
 }
 
 } // namespace croco
