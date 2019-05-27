@@ -154,3 +154,29 @@ EPStr ExplosionExplode(ExplosionHandle handle)
 
     return retval;
 }
+
+/**
+ * Ngram
+ *
+ * @access public
+ * @param  ExplosionHandle handle
+ * @param  const char *data
+ * @param  size_t minn
+ * @param  size_t maxn
+ * @param  size_t step
+ * @return EPStr
+ */
+EPStr ExplosionNgram(ExplosionHandle handle, const char *data, size_t minn, size_t maxn, size_t step)
+{
+    explosion *explode = static_cast<explosion*>(handle);
+    
+    nlohmann::json retj = explode->ngram(std::string(data), minn, maxn, step);
+
+    std::string word = retj.dump();
+    EPStr retval = new struct _EPStr;
+    retval->len = word.length();
+    retval->buff = new char[retval->len + 1];
+    strcpy(retval->buff, word.c_str());
+
+    return retval;
+}

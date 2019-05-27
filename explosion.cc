@@ -1,3 +1,4 @@
+#include <iostream>
 #include "explosion.h"
 
 namespace croco {
@@ -158,6 +159,43 @@ nlohmann::json explosion::explode()
 }
 
 /**
+ * N-gram文字列リスト取得
+ *
+ * @access private
+ * @param  const std::string input
+ * @param  size_t minn
+ * @param  size_t maxn
+ * @param  size_t step
+ * @return nlohmann::json
+ */
+nlohmann::json explosion::ngram(const std::string input, size_t minn, size_t maxn, size_t step)
+{
+    nlohmann::json ngrams;
+    std::vector<std::string> list = _explode(input);
+
+    size_t max = list.size();
+
+    int idx = 0;
+    for (size_t row=0; row < max; row += step) {
+        size_t nsize = (row + maxn > max) ? max - row : maxn;
+
+        std::string str("");
+        size_t _idx = 0;
+        for (; _idx < nsize - 1; _idx++) {
+            str = str + list.at(row + _idx) + " ";
+        }
+        str = str + list.at(row + _idx);
+
+        if (nsize >= minn) {
+            ngrams[idx] = str;
+            idx++;
+        }
+    } // for (size_t row=0; row < max; row++)
+
+    return ngrams;
+}
+
+/**
  * 直接正規表現
  *
  * @access private
@@ -244,6 +282,34 @@ nlohmann::json explosion::_getNode(const std::string surface, const int type, in
     node["to"]["ch"] = _utf8_strlen(text);
 
     return node;
+}
+
+/**
+ * スペース区切りの分割
+ *
+ * @access private
+ * @param  const std::string str
+ * @return std::vector<std::string>
+ */
+std::vector<std::string> explosion::_explode(const std::string str)
+{
+    std::vector<std::string> result;
+
+    size_t pos = str.find(" ");
+    size_t last = 0;
+
+    while (pos != std::string::npos) {
+        size_t size = pos - last;
+        result.push_back(str.substr(last, size));
+
+        last = pos + 1;
+        pos = str.find(" ", pos + 1);
+    }
+    if (str.length() > last) {
+        result.push_back(str.substr(last));
+    }
+
+    return result;
 }
 
 } // namespace croco

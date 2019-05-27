@@ -43,6 +43,7 @@ EXPLOSION_API void ExplosionRegexSearch(ExplosionHandle handle, const char *patt
 EXPLOSION_API void ExplosionRegexMatch(ExplosionHandle handle, const char *key);
 EXPLOSION_API void ExplosionFindMatch(ExplosionHandle handle, const char *key);
 EXPLOSION_API EPStr ExplosionExplode(ExplosionHandle handle);
+EXPLOSION_API EPStr ExplosionNgram(ExplosionHandle handle, const char *data, size_t minn, size_t maxn, size_t step);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 --TEST--
 Check for explosion presence
 --SKIPIF--
+<?php if (!extension_loaded("json")) print "skip"; ?>
 <?php if (!extension_loaded("explosion")) print "skip"; ?>
 --FILE--
 <?php

@@ -131,8 +131,40 @@ PHP_METHOD(croco_explosion, explodeRe)
 }
 /* }}} */
 
+/* {{{ proto array explosion::ngram(String data)
+ */
+PHP_METHOD(croco_explosion, ngram)
+{
+	php_explosion_object *ex_obj;
+	zval *object = getThis();
+	char *data = NULL;
+	size_t data_len;
+	zend_long minn=3, maxn=6, step=1;
+	EPStr json;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|lll", &data, &data_len, &minn, &maxn, &step) == FAILURE) {
+		return;
+	}
+
+	ex_obj = Z_EXPLOSION_P(object);
+	json = ExplosionNgram(ex_obj->explosion, data, minn, maxn, step);
+
+	array_init(return_value);
+	php_json_decode(return_value, json->buff, json->len, 1, PHP_JSON_PARSER_DEFAULT_DEPTH);
+
+	ExplosionFreeText(json);
+}
+/* }}} */
+
 /* {{{ arginfo */
 ZEND_BEGIN_ARG_INFO(arginfo_explosion_void, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_explosion_ngram, 0)
+	ZEND_ARG_INFO(0, data)
+	ZEND_ARG_INFO(0, minn)
+	ZEND_ARG_INFO(0, maxn)
+	ZEND_ARG_INFO(0, step)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_explosion_load, 0, 0, 2)
@@ -160,6 +192,7 @@ static zend_function_entry php_explosion_class_methods[] = {
 	PHP_ME(croco_explosion, load,        arginfo_explosion_load,       ZEND_ACC_PUBLIC)
 	PHP_ME(croco_explosion, explode,     arginfo_explosion_explode,    ZEND_ACC_PUBLIC)
 	PHP_ME(croco_explosion, explodeRe,   arginfo_explosion_explode_re, ZEND_ACC_PUBLIC)
+	PHP_ME(croco_explosion, ngram,       arginfo_explosion_ngram,      ZEND_ACC_PUBLIC)
 
 	PHP_FE_END
 };
