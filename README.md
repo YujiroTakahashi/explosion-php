@@ -9,6 +9,7 @@ Explosive analysis tool
 + [Class synopsis](#doc_003)
 + [\Croco\Explosion::explode](#doc_004)
 + [\Croco\Explosion::explodeRe](#doc_005)
++ [\Croco\Explosion::ngram](#doc_008)
 + [Predefined Constants](#doc_006)
 + [Return Values](#doc_007)
 
@@ -234,6 +235,33 @@ foreach ($pieces as $piece) {
 を
 ```
 -----
+
+## <a name="doc_008">array \Croco\Explosion::ngram(string wakati[, int minn = 3, int maxn = 6, int step = 1])
+```php
+$data = "これは 推 論 の 形 をと って は いる が 、 その 示 す ところ は 、 思 惟 する 私 が 存在する という 自己 意識 の 直 覚 である 。";
+
+$explosion = new \Croco\Explosion();
+
+$list = $explosion->ngram($data, 3, 12, 3);
+foreach ($list as $idx => $row) {
+    echo $idx .':'. var_export($row, true) ."\n";
+}
+```
+
+```
+0:'これは 推 論 の 形 をと って は いる が 、 その'
+1:'の 形 をと って は いる が 、 その 示 す ところ'
+2:'って は いる が 、 その 示 す ところ は 、 思'
+3:'が 、 その 示 す ところ は 、 思 惟 する 私'
+4:'示 す ところ は 、 思 惟 する 私 が 存在する という'
+5:'は 、 思 惟 する 私 が 存在する という 自己 意識 の'
+6:'惟 する 私 が 存在する という 自己 意識 の 直 覚 である'
+7:'が 存在する という 自己 意識 の 直 覚 である 。'
+8:'自己 意識 の 直 覚 である 。'
+9:'直 覚 である 。'
+```
+-----
+
 
 
 ## <a name="doc_006">Predefined Constants
