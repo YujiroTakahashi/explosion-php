@@ -242,7 +242,7 @@ $data = "これは 推 論 の 形 をと って は いる が 、 その 示 �
 
 $explosion = new \Croco\Explosion();
 
-$list = $explosion->ngram($data, 3, 12, 3);
+$list = $explosion->ngram($data, , 12, 3);
 foreach ($list as $idx => $row) {
     echo $idx .':'. var_export($row, true) ."\n";
 }
@@ -258,7 +258,6 @@ foreach ($list as $idx => $row) {
 6:'惟 する 私 が 存在する という 自己 意識 の 直 覚 である'
 7:'が 存在する という 自己 意識 の 直 覚 である 。'
 8:'自己 意識 の 直 覚 である 。'
-9:'直 覚 である 。'
 ```
 -----
 
