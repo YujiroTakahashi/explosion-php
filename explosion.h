@@ -10,23 +10,33 @@
 #include <vector>
 
 #include <re2/re2.h>
-#include "json.hpp"
 
 namespace croco {
 
 class explosion {
 public:
-    enum {
+    enum node_type_t {
         TYPE_NONE,
         TYPE_FIND,
         TYPE_REGEX
     };
+    typedef struct _position_t {
+        std::size_t line;
+        std::size_t ch;
+    } position_t;
     typedef struct _Node {
         std::string str;
         std::size_t position;
         std::size_t length;
-        int type;
+        node_type_t type;
     } Node;
+    typedef struct _NodeFormat {
+        std::string surface;
+        node_type_t type;
+        position_t from;
+        position_t to;
+    } NodeFormat;
+
 	typedef std::map<std::size_t, Node> pieces_t;
 
 private:
@@ -40,8 +50,9 @@ public:
     void regexSearch(const std::string pattern);
 	void regexMatch(const std::string key);
     void findMatch(const std::string key);
-	nlohmann::json explode();
-    nlohmann::json ngram(
+    void findAll(std::vector<std::string> dictionary);
+	std::vector<NodeFormat> explode();
+    std::vector<std::string> ngram(
         const std::string input, 
         size_t minn = 3, 
         size_t maxn = 6, 
@@ -51,7 +62,7 @@ public:
 private:
     void _regexSearch(const std::string pattern);
     int _utf8_strlen(const std::string word);
-    nlohmann::json _getNode(const std::string surface, const int type, int &no, std::string &text);
+    NodeFormat _getNode(const std::string surface, const node_type_t type, int &no, std::string &text);
     std::vector<std::string> _explode(const std::string str);
 }; // class explosion
 

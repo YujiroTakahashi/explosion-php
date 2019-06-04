@@ -9,6 +9,14 @@
 
 extern "C" {
 
+#include "php.h"
+#include "php_ini.h"
+#include "main/SAPI.h"
+
+#include "zend_exceptions.h"
+#include "zend_interfaces.h"
+#include "SAPI.h"
+
 #endif /* __cplusplus */
 
 #ifndef EXPLOSION_API
@@ -42,8 +50,9 @@ EXPLOSION_API void ExplosionLoad(ExplosionHandle handle, const char *key, const 
 EXPLOSION_API void ExplosionRegexSearch(ExplosionHandle handle, const char *pattern);
 EXPLOSION_API void ExplosionRegexMatch(ExplosionHandle handle, const char *key);
 EXPLOSION_API void ExplosionFindMatch(ExplosionHandle handle, const char *key);
-EXPLOSION_API EPStr ExplosionExplode(ExplosionHandle handle);
-EXPLOSION_API EPStr ExplosionNgram(ExplosionHandle handle, const char *data, size_t minn, size_t maxn, size_t step);
+EXPLOSION_API void ExplosionFindAll(ExplosionHandle handle, HashTable *ht);
+EXPLOSION_API void ExplosionExplode(ExplosionHandle handle, zval *retval);
+EXPLOSION_API void ExplosionNgram(ExplosionHandle handle, zval *retval, const char *data, size_t minn, size_t maxn, size_t step);
 
 #ifdef __cplusplus
 }

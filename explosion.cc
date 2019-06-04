@@ -107,14 +107,38 @@ void explosion::findMatch(const std::string key)
 }
 
 /**
+ * 文字列一覧の検索
+ *
+ * @access public
+ * @param  const std::vector<std::string> dictionary
+ */
+void explosion::findAll(std::vector<std::string> dictionary)
+{
+    for (auto &needle : dictionary) {
+        std::size_t length = needle.length();
+        std::size_t position = _haystack.find(needle);
+        while (position != std::string::npos) {
+            Node node = {
+                needle, 
+                position, 
+                length,
+                TYPE_FIND
+            };
+            _pieces.insert(std::make_pair(position, node));
+            position = _haystack.find(needle, position + length);
+        }
+    } // for (auto &needle : dictionary)
+}
+
+/**
  * データの抽出
  *
  * @access public
- * @return std::vector<std::string>
+ * @return std::vector<NodeFormat>
  */
-nlohmann::json explosion::explode()
+std::vector<explosion::NodeFormat> explosion::explode()
 {
-    nlohmann::json pieces;
+    std::vector<NodeFormat> pieces;
 
     int idx = 0, no = 0;
     std::string text("");
@@ -125,12 +149,12 @@ nlohmann::json explosion::explode()
                 std::string surface = _haystack.substr(
                     position, node.first - position
                 );
-                pieces[idx] = _getNode(
+                pieces.push_back(_getNode(
                     surface, 
                     TYPE_NONE, 
                     no, 
                     text
-                );
+                ));
                 idx++;
             }
 
@@ -138,12 +162,12 @@ nlohmann::json explosion::explode()
                 std::string surface = _haystack.substr(
                     node.first, node.second.length
                 );
-                pieces[idx] = _getNode(
+                pieces.push_back(_getNode(
                     surface, 
                     node.second.type, 
                     no, 
                     text
-                );
+                ));
                 idx++;
             }
         }
@@ -152,7 +176,7 @@ nlohmann::json explosion::explode()
 
     if (_haystack.length() > position) {
         std::string surface = _haystack.substr(position);
-        pieces[idx] = _getNode(surface, TYPE_NONE, no, text);
+        pieces.push_back(_getNode(surface, TYPE_NONE, no, text));
     }
 
     return pieces;
@@ -166,29 +190,27 @@ nlohmann::json explosion::explode()
  * @param  size_t minn
  * @param  size_t maxn
  * @param  size_t step
- * @return nlohmann::json
+ * @return std::vector<std::string>
  */
-nlohmann::json explosion::ngram(const std::string input, size_t minn, size_t maxn, size_t step)
+std::vector<std::string> explosion::ngram(const std::string input, size_t minn, size_t maxn, size_t step)
 {
-    nlohmann::json ngrams;
+    std::vector<std::string> ngrams;
     std::vector<std::string> list = _explode(input);
 
     size_t max = list.size();
 
-    int idx = 0;
     for (size_t row=0; row < max; row += step) {
         size_t nsize = (row + maxn > max) ? max - row : maxn;
 
         std::string str("");
-        size_t _idx = 0;
-        for (; _idx < nsize - 1; _idx++) {
-            str = str + list.at(row + _idx) + " ";
+        size_t idx = 0;
+        for (; idx < nsize - 1; idx++) {
+            str = str + list.at(row + idx) + " ";
         }
-        str = str + list.at(row + _idx);
+        str = str + list.at(row + idx);
 
         if (nsize >= minn) {
-            ngrams[idx] = str;
-            idx++;
+            ngrams.push_back(str);
         }
     } // for (size_t row=0; row < max; row++)
 
@@ -258,14 +280,14 @@ int explosion::_utf8_strlen(const std::string word)
  * @param  int &no
  * @return int
  */
-nlohmann::json explosion::_getNode(const std::string surface, const int type, int &no, std::string &text)
+explosion::NodeFormat explosion::_getNode(const std::string surface, const node_type_t type, int &no, std::string &text)
 {
-    nlohmann::json node;
+    NodeFormat node;
 
-    node["surface"] = surface;
-    node["type"] = type;
-    node["from"]["line"] = no;
-    node["from"]["ch"] = _utf8_strlen(text);
+    node.surface = surface;
+    node.type = type;
+    node.from.line = no;
+    node.from.ch = _utf8_strlen(text);
 
     std::string::size_type last, pos = surface.find('\n');
     if (pos != std::string::npos) {
@@ -278,8 +300,9 @@ nlohmann::json explosion::_getNode(const std::string surface, const int type, in
     } else {
         text = text + surface;
     }
-    node["to"]["line"] = no;
-    node["to"]["ch"] = _utf8_strlen(text);
+
+    node.to.line = no;
+    node.to.ch = _utf8_strlen(text);
 
     return node;
 }

@@ -64,7 +64,9 @@ PHP_METHOD(croco_explosion, load)
 }
 /* }}} */
 
-/* {{{ proto array explosion::explode(String haystack, String find_key[, String regex_key])
+/* {{{ 
+	proto array explosion::explode(String haystack, String find_key[, String regex_key])
+	proto array explosion::explode(String haystack, array dictionary)
  */
 PHP_METHOD(croco_explosion, explode)
 {
@@ -72,33 +74,28 @@ PHP_METHOD(croco_explosion, explode)
 	zval *object = getThis();
 	char *haystack = NULL;
 	size_t haystack_len;
-	char *find_key = NULL;
-	size_t find_key_len;
+	zval *dictionary;
 	char *regex_key = NULL;
 	size_t regex_key_len = 0;
-	EPStr json;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss|s", &haystack, &haystack_len, &find_key, &find_key_len, &regex_key, &regex_key_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sz|s", &haystack, &haystack_len, &dictionary, &regex_key, &regex_key_len) == FAILURE) {
 		return;
 	}
 
 	ex_obj = Z_EXPLOSION_P(object);
 	ExplosionSetHaystack(ex_obj->explosion, haystack);
 
-	if (find_key_len != 0) {
-		ExplosionFindMatch(ex_obj->explosion, find_key);
+	if (Z_TYPE_P(dictionary) == IS_ARRAY) {
+		ExplosionFindAll(ex_obj->explosion, Z_ARRVAL_P(dictionary));
+	} else if (Z_TYPE_P(dictionary) == IS_STRING && Z_STRLEN_P(dictionary) != 0) {
+		ExplosionFindMatch(ex_obj->explosion, Z_STRVAL_P(dictionary));
 	}
 
 	if (regex_key_len != 0) {
 		ExplosionRegexMatch(ex_obj->explosion, regex_key);
 	}
 
-	json = ExplosionExplode(ex_obj->explosion);
-
-	array_init(return_value);
-	php_json_decode(return_value, json->buff, json->len, 1, PHP_JSON_PARSER_DEFAULT_DEPTH);
-
-	ExplosionFreeText(json);
+	ExplosionExplode(ex_obj->explosion, return_value);
 }
 /* }}} */
 
@@ -112,7 +109,6 @@ PHP_METHOD(croco_explosion, explodeRe)
 	size_t haystack_len;
 	char *pattern = NULL;
 	size_t pattern_len;
-	EPStr json;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &haystack, &haystack_len, &pattern, &pattern_len) == FAILURE) {
 		return;
@@ -122,12 +118,7 @@ PHP_METHOD(croco_explosion, explodeRe)
 	ExplosionSetHaystack(ex_obj->explosion, haystack);
 
 	ExplosionRegexSearch(ex_obj->explosion, pattern);
-	json = ExplosionExplode(ex_obj->explosion);
-
-	array_init(return_value);
-	php_json_decode(return_value, json->buff, json->len, 1, PHP_JSON_PARSER_DEFAULT_DEPTH);
-
-	ExplosionFreeText(json);
+	ExplosionExplode(ex_obj->explosion, return_value);
 }
 /* }}} */
 
@@ -140,19 +131,13 @@ PHP_METHOD(croco_explosion, ngram)
 	char *data = NULL;
 	size_t data_len;
 	zend_long minn=3, maxn=6, step=1;
-	EPStr json;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|lll", &data, &data_len, &minn, &maxn, &step) == FAILURE) {
 		return;
 	}
 
 	ex_obj = Z_EXPLOSION_P(object);
-	json = ExplosionNgram(ex_obj->explosion, data, minn, maxn, step);
-
-	array_init(return_value);
-	php_json_decode(return_value, json->buff, json->len, 1, PHP_JSON_PARSER_DEFAULT_DEPTH);
-
-	ExplosionFreeText(json);
+	ExplosionNgram(ex_obj->explosion, return_value, data, minn, maxn, step);
 }
 /* }}} */
 
